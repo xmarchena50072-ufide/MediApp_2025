@@ -1,18 +1,24 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface ILaboratorio extends Document {
-  paciente: string;
+  paciente: mongoose.Types.ObjectId;
   archivos: string[];
-  fecha: Date;
 }
 
-const LaboratorioSchema: Schema = new Schema(
-  {
-    paciente: { type: String, required: true },
-    archivos: { type: [String], required: true },
-    fecha: { type: Date, default: Date.now },
+const LaboratorioSchema: Schema = new Schema({
+  paciente: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Paciente',
+    required: true,
   },
-  { timestamps: true }
-);
+  archivos: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
+});
 
-export default mongoose.model<ILaboratorio>("Laboratorio", LaboratorioSchema);
+const Laboratorio = mongoose.model<ILaboratorio>('Laboratorio', LaboratorioSchema);
+
+export default Laboratorio;

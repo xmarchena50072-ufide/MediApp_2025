@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
 import Cita, { ICita } from "../models/cita.model";
+import { sendEmail } from "../services/email.service";
+import moment from "moment";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Crear una nueva cita
 export const createCita = async (req: Request, res: Response): Promise<void> => {
@@ -18,6 +23,37 @@ export const createCita = async (req: Request, res: Response): Promise<void> => 
     // Crear la nueva cita
     const nuevaCita = new Cita({ titulo, fechaHora, descripcion });
     await nuevaCita.save();
+
+    // Enviar correo electrónico de notificación
+    const subject = "Cita en MediApp";
+    const text = `Se ha creado una nueva cita con la siguiente información:\n\nTítulo: ${titulo}\nDescripción: ${descripcion}\nFecha y Hora: ${fechaHora}`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <h1 style="color: #4CAF50; text-align: center;">Nueva Cita Creada</h1>
+        <p style="font-size: 16px; color: #333;">Se ha creado una nueva cita con la siguiente información:</p>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Título:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${titulo}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Descripción:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${descripcion}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Fecha y Hora:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${moment(fechaHora).format('YYYY-MM-DD hh:mm A')}</td>
+          </tr>
+        </table>
+        <p style="font-size: 14px; color: #777; text-align: center; margin-top: 20px;">Gracias por usar nuestro servicio.</p>
+      </div>
+    `;
+    const emailUser = process.env.EMAIL_APPOINTMENT;
+    if (!emailUser) {
+      throw new Error("EMAIL_APPOINTMENT no está definido en las variables de entorno");
+    }
+
+    await sendEmail(emailUser, subject, text, html);
 
     res.status(201).json({ message: "Cita creada exitosamente", data: nuevaCita });
   } catch (error) {

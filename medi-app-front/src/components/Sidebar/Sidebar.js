@@ -134,7 +134,7 @@ export default function Sidebar() {
 										>
 											<i
 												className={
-													'fas fa-tools mr-2 text-sm ' +
+													'fas fa-hospital-user mr-2 text-sm ' +
 													(location.pathname === '/admin/settings' ? 'opacity-75' : 'text-blueGray-300')
 												}
 											></i>{' '}
@@ -265,7 +265,7 @@ export default function Sidebar() {
 									</li>
 
 
-									<li className="items-center">
+									{/* <li className="items-center">
 										<Link
 											className={
 												'text-xs uppercase py-3 font-bold block ' +
@@ -283,7 +283,7 @@ export default function Sidebar() {
 											></i>{' '}
 											Laboratorios
 										</Link>
-									</li>
+									</li> */}
 
 								</>
 							) : (

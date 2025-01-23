@@ -160,7 +160,6 @@ notus-react
 │   │   ├── Footers
 │   │   │   ├── Footer.js
 │   │   │   ├── FooterAdmin.js
-│   │   │   └── FooterSmall.js
 │   │   ├── Headers
 │   │   │   └── HeaderStats.js
 │   │   ├── Maps

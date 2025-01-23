@@ -3,6 +3,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
+import { InputText } from 'primereact/inputtext';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -55,9 +56,9 @@ export default function DynamicTable({ data, columns, name }) {
 				<Button type="button" className="bg-red-600" icon="pi pi-file-pdf" rounded onClick={exportPdf} data-pr-tooltip="PDF" />
 			</div>
 			<Tooltip target=".export-buttons>button" position="bottom" />
-			<DataTable ref={dt} value={data} paginator rows={5} rowsPerPageOptions={[5, 10, 25]} sortMode="multiple" tableStyle={{ minWidth: '50rem' }}  className="p-datatable-custom">
+			<DataTable ref={dt} value={data} paginator rows={5} rowsPerPageOptions={[5, 10, 25]} sortMode="multiple" tableStyle={{ minWidth: '50rem' }} className="p-datatable-custom" filterDisplay="row" emptyMessage="No se encontró información :(">
 				{columns.map((col, index) => (
-					<Column key={index} field={col.field} header={col.header} body={col.body} sortable={col.header !== 'Acción'} />
+					<Column key={index} field={col.field} header={col.header} body={col.body} sortable={col.header !== 'Acción'} filter={col.field === 'titulo' || col.field === 'paciente' || col.field === 'nombre'} />
 				))}
 			</DataTable>
             <style jsx>{`

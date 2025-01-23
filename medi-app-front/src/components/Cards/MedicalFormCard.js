@@ -1,5 +1,4 @@
-import React, { useState, useEffect }from "react";
-
+import React, { useState, useEffect } from "react";
 import {
   getMedicalForms,
   createMedicalForm,
@@ -7,6 +6,21 @@ import {
   updateMedicalForm,
 } from "../../api/medicalForm";
 import toast, { Toaster } from "react-hot-toast";
+
+const InputField = ({ label, name, value, onChange, type = "text" }) => (
+  <div className="w-full lg:w-6/12 px-4 mb-3">
+    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+    />
+  </div>
+);
 
 export default function CardMedicalForm() {
   const [form, setForm] = useState({
@@ -27,12 +41,8 @@ export default function CardMedicalForm() {
     observaciones: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-
   const [formsList, setFormsList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchForms();
@@ -47,26 +57,48 @@ export default function CardMedicalForm() {
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       await createMedicalForm(form);
       toast.success("Formulario creado exitosamente");
+      setForm({
+        nombreCompleto: "",
+        fechaNacimiento: "",
+        cedula: "",
+        correo: "",
+        contactoEmergencia: "",
+        sexo: "",
+        patologias: "",
+        alergias: "",
+        cirugias: "",
+        inmunizaciones: "",
+        tabaco: "",
+        alcohol: "",
+        drogas: "",
+        actividadFisica: "",
+        observaciones: "",
+      });
       fetchForms();
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
-      {/* Header */}
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="rounded-t bg-white mb-0 px-6 py-6">
         <h6 className="text-blueGray-700 text-xl font-bold">Ficha Médica</h6>
       </div>
-
-      {/* Body */}
       <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-        {/* Ficha Básica */}
         <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
           Ficha Básica
         </h6>
@@ -110,17 +142,24 @@ export default function CardMedicalForm() {
           />
         </div>
 
-        {/* Antecedentes */}
         <h6 className="text-blueGray-400 text-sm mt-6 mb-6 font-bold uppercase">
           Antecedentes
         </h6>
         <div className="flex flex-wrap">
-          <InputField
-            label="Patologías"
-            name="patologias"
-            value={form.patologias}
-            onChange={handleChange}
-          />
+          <div className="w-full lg:w-6/12 px-4">
+            <div className="relative w-full mb-3">
+              <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                Patologías
+              </label>
+              <textarea
+                name="patologias"
+                value={form.patologias}
+                onChange={handleChange}
+                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                rows="3"
+              />
+            </div>
+          </div>
           <InputField
             label="Alergias"
             name="alergias"
@@ -141,7 +180,6 @@ export default function CardMedicalForm() {
           />
         </div>
 
-        {/* Hábitos */}
         <h6 className="text-blueGray-400 text-sm mt-6 mb-6 font-bold uppercase">
           Hábitos
         </h6>
@@ -172,7 +210,6 @@ export default function CardMedicalForm() {
           />
         </div>
 
-        {/* Observaciones */}
         <div className="mt-6">
           <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
             Observaciones Generales
@@ -187,31 +224,17 @@ export default function CardMedicalForm() {
           ></textarea>
         </div>
 
-        {/* Guardar */}
         <div className="flex justify-end mt-6">
-          <button onClick={handleSubmit}
+          <button
+            onClick={handleSubmit}
             className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-6 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
             type="button"
+            disabled={loading}
           >
-            Guardar Información
+            {loading ? "Guardando..." : "Guardar Información"}
           </button>
         </div>
       </div>
     </div>
   );
 }
-
-const InputField = ({ label, name, value, onChange, type = "text" }) => (
-  <div className="w-full lg:w-6/12 px-4 mb-3">
-    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-      {label}
-    </label>
-    <input
-      type={type}
-      name={name}
-      value={value}
-      onChange={onChange}
-      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-    />
-  </div>
-);

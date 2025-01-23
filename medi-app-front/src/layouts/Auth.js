@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "components/Navbars/AuthNavbar.js";
-import FooterSmall from "components/Footers/FooterSmall.js";
 
 import Login from "views/auth/Login.js";
 import Register from "views/auth/Register.js";
@@ -29,7 +28,6 @@ export default function Auth() {
             <Route path="reset-password/:token" element={<ResetPassword />} />
             <Route path="*" element={<Navigate to="login" />} />
           </Routes>
-          <FooterSmall absolute />
         </section>
       </main>
     </>

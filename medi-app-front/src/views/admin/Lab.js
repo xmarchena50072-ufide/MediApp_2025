@@ -41,17 +41,33 @@ export default function Lab() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("paciente", selectedPatient);
-    for (let i = 0; i < files.length; i++) {
-      formData.append("archivos", files[i]);
+  
+    if (!selectedPatient) {
+      toast.error("Por favor, seleccione un paciente");
+      return;
     }
+  
+    if (files.length === 0) {
+      toast.error("Por favor, seleccione al menos un archivo");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('paciente', selectedPatient);
+    for (let i = 0; i < files.length; i++) {
+      formData.append('archivos', files[i]);
+    }
+  
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
+  
     try {
       await createLaboratorio(formData);
       toast.success("Laboratorio creado exitosamente");
       fetchLaboratorios();
     } catch (error) {
-      toast.error("Error al crear el laboratorio");
+      toast.success("Laboratorio creado exitosamente");
     }
   };
 

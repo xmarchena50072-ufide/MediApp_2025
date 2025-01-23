@@ -49,15 +49,23 @@ export default function Inventory() {
   const columns = [
     { field: 'nombre', header: 'Nombre de muestra' },
     { field: 'descripcion', header: 'Descripción' },
-    { field: 'cantidad', header: 'Cantidad', body: (rowData) => (
+    { field: 'cantidad', header: 'Cantidad' },
+    { field: '', header: '', body: (rowData) => (
       <div className="flex align-items-center">
-        <span>{rowData.cantidad}</span>
         <button
-          className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-3 py-1 rounded shadow hover:shadow-md outline-none focus:outline-none ml-2"
+          className="text-white active:bg-red-600 font-bold uppercase text-xs px-3 py-1 rounded shadow hover:shadow-md outline-none focus:outline-none ml-2"
+          style={{ backgroundColor: rowData.cantidad <= 0 ? 'gray' : 'red', cursor: rowData.cantidad <= 0 ? 'not-allowed' : 'pointer' }}
           onClick={() => handleReduceQuantity(rowData._id, rowData.cantidad - 1)}
           disabled={rowData.cantidad <= 0}
         >
           <i className="fas fa-minus"></i>
+        </button>
+        <button
+          className="text-white active:bg-green-600 font-bold uppercase text-xs px-3 py-1 rounded shadow hover:shadow-md outline-none focus:outline-none ml-2"
+          style={{ backgroundColor: 'green' }}
+          onClick={() => handleReduceQuantity(rowData._id, rowData.cantidad + 1)}
+        >
+          <i className="fas fa-plus"></i>
         </button>
       </div>
     ) },

@@ -92,7 +92,7 @@ export default function Landing() {
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
                       <i className="fas fa-user-md"></i>
                     </div>
-                    <h6 className="text-xl font-semibold">Médico calificado</h6>
+                    <h6 className="text-xl font-semibold">Médicos calificados</h6>
                     <p className="mt-2 mb-4 text-blueGray-500">
                       Nuestro equipo está formado por profesionales médicos experimentados y altamente calificados dedicados a tu cuidado.
                     </p>

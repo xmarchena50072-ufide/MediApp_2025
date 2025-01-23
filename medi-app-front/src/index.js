@@ -1,13 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client"; // Cambiar a react-dom/client para React 18
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
 import 'primereact/resources/themes/saga-blue/theme.css';  
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import { PrimeReactProvider } from "primereact/api";
+import { PrimeReactProvider, locale, addLocale, updateLocaleOption, updateLocaleOptions, localeOption, localeOptions  } from "primereact/api";
 import Tailwind from "primereact/passthrough/tailwind";
 
 // layouts
@@ -25,9 +24,33 @@ import { AuthProvider } from "context/AuthContext";
 // Crear el root container con React 18
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+const value = {
+  locale: 'es',
+  pt: Tailwind
+};
+
+addLocale('es', {
+  firstDayOfWeek: 1,
+  dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+  dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+  dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+  monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+  monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+  today: 'Hoy',
+  clear: 'Limpiar',
+  startsWith: 'Empieza con',
+  contains: 'Contiene',
+  notContains: 'No contiene',
+  endsWith: 'Termina con',
+  equals: 'Igual',
+  notEquals: 'No igual',
+  noFilter: 'Sin filtro',
+});
+    
+
 root.render(
   <React.StrictMode>
-    <PrimeReactProvider value={{ pt: Tailwind }}>
+    <PrimeReactProvider value={value}>
     <AuthProvider>
       <BrowserRouter>
         <Routes>

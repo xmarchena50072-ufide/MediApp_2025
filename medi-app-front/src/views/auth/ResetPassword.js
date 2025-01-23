@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { resetPasswordRequest } from '../../api/authv2';
@@ -7,7 +7,9 @@ import toast, { Toaster } from 'react-hot-toast';
 export default function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [countdown, setCountdown] = useState(5);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -45,22 +47,40 @@ export default function ResetPassword() {
               <form onSubmit={onSubmit}>
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Nueva Contraseña</label>
-                  <input
-                    type="password"
-                    {...register("password", { required: true })}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    placeholder="Nueva Contraseña"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      {...register("password", { required: true })}
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      placeholder="Nueva Contraseña"
+                    />
+                    <span
+                      className="absolute mt-3 mr-3 right-0 text-sm cursor-pointer"
+                      onClick={() => setShowPassword(!showPassword)}
+                      style={{ zIndex: 10 }}
+                    >
+                      <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                    </span>
+                  </div>
                   {errors.password && <p className="text-red-500 text-sm mt-1">La contraseña es obligatoria</p>}
                 </div>
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Confirmar Contraseña</label>
-                  <input
-                    type="password"
-                    {...register("confirmPassword", { required: true })}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    placeholder="Confirmar Contraseña"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      {...register("confirmPassword", { required: true })}
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      placeholder="Confirmar Contraseña"
+                    />
+                    <span
+                      className="absolute mt-3 mr-3 right-0 text-sm cursor-pointer"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      style={{ zIndex: 10 }}
+                    >
+                      <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                    </span>
+                  </div>
                   {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">La confirmación de la contraseña es obligatoria</p>}
                 </div>
                 <div className="text-center mt-6">

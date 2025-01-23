@@ -153,7 +153,7 @@ export default function CardMedicalFormsTable() {
                     onClick={() => handleSelectForm(form)}
                     className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
                   >
-                    Ver Expediente Médico de {form.nombreCompleto}
+                    Ver Expediente Médico
                   </button>
                 </td>
               </tr>

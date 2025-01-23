@@ -3,6 +3,7 @@ import { Pie, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import { getAppointments } from '../../api/appointments';
 import { getMedicalForms } from '../../api/medicalForm';
+import { getInventory } from '../../api/inventory'; 
 import toast, { Toaster } from 'react-hot-toast';
 
 // Registrar los componentes de chart.js
@@ -11,10 +12,12 @@ ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearS
 export default function Reports() {
   const [chartData, setChartData] = useState(null);
   const [barChartData, setBarChartData] = useState(null);
+  const [inventoryChartData, setInventoryChartData] = useState(null); 
 
   useEffect(() => {
     fetchAppointments();
     fetchPatients();
+    fetchInventory(); 
   }, []);
 
   const fetchAppointments = async () => {
@@ -30,16 +33,16 @@ export default function Reports() {
             backgroundColor: [
               '#FF6384',
               '#36A2EB',
+              '#FF0042',
+              '#2700FF',
+              '#D500FF',
               '#FFCE56',
-              '#FF6384',
-              '#36A2EB',
-              '#FFCE56',
-              '#FF6384',
-              '#36A2EB',
-              '#FFCE56',
-              '#FF6384',
-              '#36A2EB',
-              '#FFCE56',
+              '#00FFEC',
+              '#FF5733',
+              '#6F7496',
+              '#ABABAB',
+              '#00FFF0',
+              '#901DA2',
             ],
           },
         ],
@@ -58,13 +61,33 @@ export default function Reports() {
         datasets: [
           {
             label: 'Pacientes por Edad',
-            data: Object.values(ageData),
+            data: Object.values(ageData), 
             backgroundColor: Object.keys(ageData).map(() => getRandomColor()),
           },
         ],
       });
     } catch (error) {
       toast.error('Error al obtener los pacientes');
+    }
+  };
+
+  const fetchInventory = async () => {
+    try {
+      const data = await getInventory();
+      setInventoryChartData({
+        labels: data.map(item => item.nombre),
+        datasets: [
+          {
+            label: 'Cantidad de Muestras',
+            data: data.map(item => item.cantidad),
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      });
+    } catch (error) {
+      toast.error('Error al obtener el inventario');
     }
   };
 
@@ -100,7 +123,7 @@ export default function Reports() {
       }
 
       const age = ageYears + ageMonths / 12;
-      const truncatedAge = Math.floor(age); // Redondear al número entero más bajo
+      const truncatedAge = Math.floor(age); 
       if (!ageData[truncatedAge]) {
         ageData[truncatedAge] = 0;
       }
@@ -136,23 +159,69 @@ export default function Reports() {
     <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
       <Toaster position="top-right" reverseOrder={false} />
       <div className="rounded-t bg-white mb-0 px-6 py-6">
-        <h6 className="text-blueGray-700 text-xl font-bold">Reportes</h6>
+        <h6 className="text-blueGray-700 text-xl font-bold">Reportes de gráficos</h6>
       </div>
-      <div className="flex px-4 lg:px-10 py-10 pt-0">
-        {chartData ? (
-          <div style={{ width: '30%', height: '30%', margin: '0 auto' }}>
-            <Pie data={chartData} />
+      <div className="flex flex-col px-4 lg:px-10 py-10 pt-0 space-y-6">
+        <div className="w-full">
+          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
+            <div className="rounded-t mb-0 px-4 py-3 border-0">
+              <div className="flex flex-wrap items-center">
+                <div className="relative w-full px-4 max-w-full flex-grow flex-1">
+                  <h3 className="font-semibold text-base text-blueGray-700">Reporte de Citas Agendadas por Mes</h3>
+                </div>
+              </div>
+            </div>
+            <div className="block w-full overflow-x-auto mb-5">
+              {chartData ? (
+                <div style={{ width: '20%', height: '20%', margin: '0 auto' }}>
+                  <Pie data={chartData} />
+                </div>
+              ) : (
+                <p className="p-5">Cargando datos...</p>
+              )}
+            </div>
           </div>
-        ) : (
-          <p className="p-5">Cargando datos...</p>
-        )}
-        {barChartData ? (
-          <div style={{ width: '40%', height: '40%', margin: '0 auto', marginTop: '20px' }}>
-            <Bar data={barChartData} options={barChartOptions}/>
+        </div>
+        <div className="w-full">
+          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
+            <div className="rounded-t mb-0 px-4 py-3 border-0">
+              <div className="flex flex-wrap items-center">
+                <div className="relative w-full px-4 max-w-full flex-grow flex-1">
+                  <h3 className="font-semibold text-base text-blueGray-700">Reporte de Pacientes por Edad</h3>
+                </div>
+              </div>
+            </div>
+            <div className="block w-full overflow-x-auto mb-5">
+              {barChartData ? (
+                <div style={{ width: '40%', height: '40%', margin: '0 auto' }}>
+                  <Bar data={barChartData} options={barChartOptions} />
+                </div>
+              ) : (
+                <p className="p-5">Cargando datos...</p>
+              )}
+            </div>
           </div>
-        ) : (
-          <p className="p-5">Cargando datos...</p>
-        )}
+        </div>
+        <div className="w-full">
+          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
+            <div className="rounded-t mb-0 px-4 py-3 border-0">
+              <div className="flex flex-wrap items-center">
+                <div className="relative w-full px-4 max-w-full flex-grow flex-1">
+                  <h3 className="font-semibold text-base text-blueGray-700">Reporte de Inventario de Muestras por Cantidad</h3>
+                </div>
+              </div>
+            </div>
+            <div className="block w-full overflow-x-auto mb-5">
+              {inventoryChartData ? (
+                <div style={{ width: '40%', height: '40%', margin: '0 auto' }}>
+                  <Bar data={inventoryChartData} options={{ responsive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Inventario de Medicamentos' } } }} />
+                </div>
+              ) : (
+                <p className="p-5">Cargando datos...</p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
