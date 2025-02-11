@@ -1,0 +1,8 @@
+#https://stackoverflow.com/a/66019543
+tunnels:
+    frontend:
+        proto: http
+        addr: 3000
+    backend:
+        proto: http
+        addr: 4000
