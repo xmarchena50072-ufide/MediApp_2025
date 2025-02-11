@@ -60,7 +60,7 @@ const UserDropdown = () => {
               src={"assets/img/team-1-800x800.jpg"}
               onError={(e) => {
                 e.target.onerror = null; // Evita loops infinitos
-                e.target.src = "https://via.placeholder.com/150"; // Imagen de respaldo
+                e.target.src = ""; // Imagen de respaldo
               }}
             />
           </span>
